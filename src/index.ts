@@ -1,12 +1,12 @@
-import { PontusRequestConfig } from './types'
+import { PontusRequestConfig, PontusPromise } from './types'
 import { buildURL } from './helpers/url'
 import { transformRequest } from './helpers/data'
 import { processHeaders } from './helpers/headers'
 import xhr from './xhr'
 
-function pontus(config: PontusRequestConfig): void {
+function pontus(config: PontusRequestConfig): PontusPromise {
   processConfig(config)
-  xhr(config)
+  return xhr(config)
 }
 
 // 前置处理请求config

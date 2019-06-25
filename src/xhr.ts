@@ -1,14 +1,46 @@
-import { PontusRequestConfig } from './types'
+import { PontusRequestConfig, PontusPromise, PontusResponse } from './types'
 
-export default function xhr(config: PontusRequestConfig) {
-  const { data = null, url, method = 'get', headers } = config
+export default function xhr(config: PontusRequestConfig): PontusPromise {
+  return new Promise(resolve => {
+    const { data = null, url, method = 'get', headers, responseType } = config
 
-  const request = new XMLHttpRequest()
+    const request = new XMLHttpRequest()
 
-  request.open(method.toUpperCase(), url, true)
-  Object.keys(headers).forEach(name => {
-    request.setRequestHeader(name, headers[name])
+    if (responseType) {
+      request.responseType = responseType
+    }
+
+    request.open(method.toUpperCase(), url, true)
+
+    request.onreadystatechange = function handleLoad() {
+      if (request.readyState !== 4) {
+        return
+      }
+      console.log(request)
+
+      const reponseHeaders = request.getAllResponseHeaders()
+
+      const responseData = responseType !== 'text' ? request.response : request.responseText
+
+      const response: PontusResponse = {
+        data: responseData,
+        status: request.status,
+        statusText: request.statusText,
+        headers: reponseHeaders,
+        config,
+        request
+      }
+      resolve(response)
+    }
+
+    Object.keys(headers).forEach(name => {
+      if (data === null && name.toLowerCase() === 'content-type') {
+        delete headers[name]
+      } else {
+        request.setRequestHeader(name, headers[name])
+      }
+    })
+
+    request.send(data)
   })
-
-  request.send(data)
 }

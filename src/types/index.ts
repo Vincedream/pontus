@@ -20,4 +20,16 @@ export interface PontusRequestConfig {
   data?: any
   params?: any
   headers?: any
+  responseType?: XMLHttpRequestResponseType
 }
+
+export interface PontusResponse {
+  data: any
+  status: number
+  statusText: string
+  headers: any
+  config: PontusRequestConfig
+  request: any
+}
+
+export interface PontusPromise extends Promise<PontusResponse> {}
