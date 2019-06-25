@@ -1,12 +1,14 @@
-import { PontusRequestConfig, PontusPromise } from './types'
+import { PontusRequestConfig, PontusPromise, PontusResponse } from './types'
 import { buildURL } from './helpers/url'
-import { transformRequest } from './helpers/data'
+import { transformRequest, transformResponse } from './helpers/data'
 import { processHeaders } from './helpers/headers'
 import xhr from './xhr'
 
 function pontus(config: PontusRequestConfig): PontusPromise {
   processConfig(config)
-  return xhr(config)
+  return xhr(config).then(res => {
+    return transformResponseData(res)
+  })
 }
 
 // 前置处理请求config
@@ -32,6 +34,11 @@ function transformHeaders(config: PontusRequestConfig): any {
 // 调用transformRequest，将object类型转换为JSON，赋给post请求中的data
 function transformRequestData(config: PontusRequestConfig): any {
   return transformRequest(config.data)
+}
+
+function transformResponseData(res: PontusResponse): PontusResponse {
+  res.data = transformResponse(res.data)
+  return res
 }
 
 export default pontus
