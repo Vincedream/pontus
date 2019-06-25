@@ -2,7 +2,7 @@ import { PontusRequestConfig, PontusPromise, PontusResponse } from './types'
 import { parseHeaders } from './helpers/headers'
 
 export default function xhr(config: PontusRequestConfig): PontusPromise {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     const { data = null, url, method = 'get', headers, responseType } = config
 
     const request = new XMLHttpRequest()
@@ -32,6 +32,11 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
         request
       }
       resolve(response)
+    }
+
+    // 网络错误捕获
+    request.onerror = function handleError() {
+      reject(new Error('Network Error'))
     }
 
     Object.keys(headers).forEach(name => {
