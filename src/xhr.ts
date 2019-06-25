@@ -3,12 +3,16 @@ import { parseHeaders } from './helpers/headers'
 
 export default function xhr(config: PontusRequestConfig): PontusPromise {
   return new Promise((resolve, reject) => {
-    const { data = null, url, method = 'get', headers, responseType } = config
+    const { data = null, url, method = 'get', headers, responseType, timeout } = config
 
     const request = new XMLHttpRequest()
 
     if (responseType) {
       request.responseType = responseType
+    }
+
+    if (timeout) {
+      request.timeout = timeout
     }
 
     request.open(method.toUpperCase(), url, true)
@@ -37,6 +41,11 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
     // 网络错误捕获
     request.onerror = function handleError() {
       reject(new Error('Network Error'))
+    }
+
+    // 网络超时错误
+    request.ontimeout = function handleTimeout() {
+      reject(new Error(`Timeout of ${timeout} ms exceeded`))
     }
 
     Object.keys(headers).forEach(name => {
