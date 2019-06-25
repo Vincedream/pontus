@@ -21,7 +21,10 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
       if (request.readyState !== 4) {
         return
       }
-      console.log(request)
+
+      if (request.status === 0) {
+        return
+      }
 
       const reponseHeaders = parseHeaders(request.getAllResponseHeaders())
 
@@ -35,7 +38,7 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
         config,
         request
       }
-      resolve(response)
+      handleResponse(response)
     }
 
     // 网络错误捕获
@@ -57,5 +60,13 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
     })
 
     request.send(data)
+
+    function handleResponse(response: PontusResponse): void {
+      if (response.status >= 200 && response.status < 300) {
+        resolve(response)
+      } else {
+        reject(new Error(`Request failed with status code ${response.status}`))
+      }
+    }
   })
 }
