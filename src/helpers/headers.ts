@@ -24,3 +24,27 @@ export function processHeaders(headers: any, data: any) {
   }
   return headers
 }
+
+// 将string格式的header转换为object
+export function parseHeaders(headers: string): any {
+  // 创建空对象
+  let parsed = Object.create(null)
+
+  if (!headers) {
+    return parsed
+  }
+
+  headers.split('\r\n').forEach(line => {
+    let [key, val] = line.split(':')
+    key = key.trim().toLowerCase()
+    if (!key) {
+      return
+    }
+    if (val) {
+      val = val.trim()
+    }
+    parsed[key] = val
+  })
+
+  return parsed
+}

@@ -1,4 +1,5 @@
 import { PontusRequestConfig, PontusPromise, PontusResponse } from './types'
+import { parseHeaders } from './helpers/headers'
 
 export default function xhr(config: PontusRequestConfig): PontusPromise {
   return new Promise(resolve => {
@@ -18,7 +19,7 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
       }
       console.log(request)
 
-      const reponseHeaders = request.getAllResponseHeaders()
+      const reponseHeaders = parseHeaders(request.getAllResponseHeaders())
 
       const responseData = responseType !== 'text' ? request.response : request.responseText
 
