@@ -34,3 +34,23 @@ export interface PontusResponse {
 }
 
 export interface PontusPromise extends Promise<PontusResponse> {}
+
+export interface PontusError extends Error {
+  isPontusError: boolean
+  config: PontusRequestConfig
+  code?: string | null
+  request?: any
+  response?: PontusResponse
+}
+
+export interface Pontus {
+  request(config: PontusRequestConfig): PontusPromise
+
+  get(url: string, config?: PontusRequestConfig): PontusPromise
+  delete(url: string, config?: PontusRequestConfig): PontusPromise
+  head(url: string, config?: PontusRequestConfig): PontusPromise
+  options(url: string, config?: PontusRequestConfig): PontusPromise
+  post(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
+  put(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
+  patch(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
+}

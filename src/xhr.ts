@@ -1,5 +1,6 @@
 import { PontusRequestConfig, PontusPromise, PontusResponse } from './types'
 import { parseHeaders } from './helpers/headers'
+import { createError } from './helpers/error'
 
 export default function xhr(config: PontusRequestConfig): PontusPromise {
   return new Promise((resolve, reject) => {
@@ -43,12 +44,12 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
 
     // 网络错误捕获
     request.onerror = function handleError() {
-      reject(new Error('Network Error'))
+      reject(createError('Network Error', config, null, request))
     }
 
     // 网络超时错误
     request.ontimeout = function handleTimeout() {
-      reject(new Error(`Timeout of ${timeout} ms exceeded`))
+      reject(createError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
     }
 
     Object.keys(headers).forEach(name => {
@@ -61,11 +62,20 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
 
     request.send(data)
 
+    // 处理错误状态码
     function handleResponse(response: PontusResponse): void {
       if (response.status >= 200 && response.status < 300) {
         resolve(response)
       } else {
-        reject(new Error(`Request failed with status code ${response.status}`))
+        reject(
+          createError(
+            `Request failed with status code ${response.status}`,
+            config,
+            null,
+            request,
+            response
+          )
+        )
       }
     }
   })
