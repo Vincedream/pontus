@@ -11,11 +11,11 @@ export type Method =
   | 'POST'
   | 'put'
   | 'PUT'
-  | 'pstch'
+  | 'patch'
   | 'PATCH'
 
 export interface PontusRequestConfig {
-  url: string
+  url?: string
   method?: Method
   data?: any
   params?: any
@@ -53,4 +53,8 @@ export interface Pontus {
   post(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
   put(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
   patch(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
+}
+
+export interface PontusInstance extends Pontus {
+  (config: PontusRequestConfig): PontusPromise
 }
