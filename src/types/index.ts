@@ -57,4 +57,6 @@ export interface Pontus {
 
 export interface PontusInstance extends Pontus {
   (config: PontusRequestConfig): PontusPromise
+
+  (url: string, config?: PontusRequestConfig): PontusPromise
 }

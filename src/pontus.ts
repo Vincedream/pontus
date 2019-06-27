@@ -1,44 +1,16 @@
-import { PontusRequestConfig, PontusPromise, PontusResponse } from './types'
-import { buildURL } from './helpers/url'
-import { transformRequest, transformResponse } from './helpers/data'
-import { processHeaders } from './helpers/headers'
-import xhr from './xhr'
+import { PontusInstance } from './types'
+import Pontus from './core/Pontus'
+import { extend } from './helpers/util'
 
-function pontus(config: PontusRequestConfig): PontusPromise {
-  processConfig(config)
-  return xhr(config).then(res => {
-    return transformResponseData(res)
-  })
+function createInstance(): PontusInstance {
+  const context = new Pontus()
+  const instance = Pontus.prototype.request.bind(context)
+
+  extend(instance, context)
+
+  return instance as PontusInstance
 }
 
-// 前置处理请求config
-function processConfig(config: PontusRequestConfig): void {
-  // 顺序不能变
-  config.url = transFormURL(config)
-  config.headers = transformHeaders(config)
-  config.data = transformRequestData(config)
-}
-
-// 调用buildURL，将params转换为url
-function transFormURL(config: PontusRequestConfig): string {
-  const { url, params } = config
-  return buildURL(url, params)
-}
-
-// 处理Headers
-function transformHeaders(config: PontusRequestConfig): any {
-  const { headers = {}, data } = config
-  return processHeaders(headers, data)
-}
-
-// 调用transformRequest，将object类型转换为JSON，赋给post请求中的data
-function transformRequestData(config: PontusRequestConfig): any {
-  return transformRequest(config.data)
-}
-
-function transformResponseData(res: PontusResponse): PontusResponse {
-  res.data = transformResponse(res.data)
-  return res
-}
+const pontus = createInstance()
 
 export default pontus

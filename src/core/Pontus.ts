@@ -2,7 +2,15 @@ import { PontusPromise, PontusRequestConfig, Method } from '../types'
 import dispatchRequest from './dispatchRequest'
 
 export default class Pontus {
-  request(config: PontusRequestConfig): PontusPromise {
+  request(url: any, config?: any): PontusPromise {
+    if (typeof url === 'string') {
+      if (!config) {
+        config = {}
+      }
+      config.url = url
+    } else {
+      config = url
+    }
     return dispatchRequest(config)
   }
 
