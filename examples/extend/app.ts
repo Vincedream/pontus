@@ -28,7 +28,7 @@ import pontus from '../../src/index'
 
 // pontus.put('/extend/put', { msg: 'put' })
 
-pontus.patch('/extend/patch', { msg: 'patch-post' }, { method: 'post' })
+// pontus.patch('/extend/patch', { msg: 'patch-post' }, { method: 'post' })
 
 // pontus({
 //   url: '/extend/post',
@@ -38,9 +38,35 @@ pontus.patch('/extend/patch', { msg: 'patch-post' }, { method: 'post' })
 //   }
 // })
 
-pontus('/extend/post', {
-  method: 'post',
-  data: {
-    msg: 'hello'
+// pontus('/extend/post', {
+//   method: 'post',
+//   data: {
+//     msg: 'hello'
+//   }
+// })
+
+interface ResponseData<T = any> {
+  code: number
+  result: T
+  message: string
+}
+
+interface User {
+  name: string
+  age: number
+}
+
+function getUser<T>() {
+  return pontus<ResponseData<T>>('/extend/user')
+    .then(res=>res.data)
+    .catch(err => {console.log(err)})
+}
+
+async function test() {
+  const user = await getUser<User>()
+  if (user) {
+    console.log(user.result.age)
   }
-})
+}
+
+test()

@@ -24,8 +24,8 @@ export interface PontusRequestConfig {
   timeout?: number
 }
 
-export interface PontusResponse {
-  data: any
+export interface PontusResponse<T = any> {
+  data: T
   status: number
   statusText: string
   headers: any
@@ -33,7 +33,7 @@ export interface PontusResponse {
   request: any
 }
 
-export interface PontusPromise extends Promise<PontusResponse> {}
+export interface PontusPromise<T = any> extends Promise<PontusResponse<T>> {}
 
 export interface PontusError extends Error {
   isPontusError: boolean
@@ -44,19 +44,19 @@ export interface PontusError extends Error {
 }
 
 export interface Pontus {
-  request(config: PontusRequestConfig): PontusPromise
+  request<T = any>(config: PontusRequestConfig): PontusPromise<T>
 
-  get(url: string, config?: PontusRequestConfig): PontusPromise
-  delete(url: string, config?: PontusRequestConfig): PontusPromise
-  head(url: string, config?: PontusRequestConfig): PontusPromise
-  options(url: string, config?: PontusRequestConfig): PontusPromise
-  post(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
-  put(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
-  patch(url: string, data?: any, config?: PontusRequestConfig): PontusPromise
+  get<T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
+  delete<T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
+  head<T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
+  options<T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
+  post<T = any>(url: string, data?: any, config?: PontusRequestConfig): PontusPromise<T>
+  put<T = any>(url: string, data?: any, config?: PontusRequestConfig): PontusPromise<T>
+  patch<T = any>(url: string, data?: any, config?: PontusRequestConfig): PontusPromise<T>
 }
 
 export interface PontusInstance extends Pontus {
-  (config: PontusRequestConfig): PontusPromise
+  <T = any>(config: PontusRequestConfig): PontusPromise<T>
 
-  (url: string, config?: PontusRequestConfig): PontusPromise
+  <T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
 }
