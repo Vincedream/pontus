@@ -44,6 +44,11 @@ export interface PontusError extends Error {
 }
 
 export interface Pontus {
+  interceptors: {
+    request: PontusInterceptorManager<PontusRequestConfig>
+    response: PontusInterceptorManager<PontusResponse>
+  }
+
   request<T = any>(config: PontusRequestConfig): PontusPromise<T>
 
   get<T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
@@ -59,4 +64,18 @@ export interface PontusInstance extends Pontus {
   <T = any>(config: PontusRequestConfig): PontusPromise<T>
 
   <T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
+}
+
+export interface PontusInterceptorManager<T> {
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
+
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (error: any): any
 }

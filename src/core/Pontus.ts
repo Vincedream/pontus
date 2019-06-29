@@ -1,7 +1,34 @@
-import { PontusPromise, PontusRequestConfig, Method } from '../types'
+import {
+  PontusPromise,
+  PontusRequestConfig,
+  PontusResponse,
+  Method,
+  ResolvedFn,
+  RejectedFn
+} from '../types'
 import dispatchRequest from './dispatchRequest'
+import InterceptorManager from './InterceptorManager'
+
+interface Interceptors {
+  request: InterceptorManager<PontusRequestConfig>
+  response: InterceptorManager<PontusResponse>
+}
+
+interface PromiseChain<T> {
+  resolved: ResolvedFn<T> | ((config: PontusRequestConfig) => PontusPromise)
+  rejected?: RejectedFn
+}
 
 export default class Pontus {
+  interceptors: Interceptors
+
+  constructor() {
+    this.interceptors = {
+      request: new InterceptorManager<PontusRequestConfig>(),
+      response: new InterceptorManager<PontusResponse>()
+    }
+  }
+
   request(url: any, config?: any): PontusPromise {
     if (typeof url === 'string') {
       if (!config) {
@@ -11,7 +38,30 @@ export default class Pontus {
     } else {
       config = url
     }
-    return dispatchRequest(config)
+
+    const chain: PromiseChain<any>[] = [
+      {
+        resolved: dispatchRequest,
+        rejected: undefined
+      }
+    ]
+
+    this.interceptors.request.forEach(interceptors => {
+      chain.unshift(interceptors)
+    })
+
+    this.interceptors.response.forEach(interceptors => {
+      chain.push(interceptors)
+    })
+
+    let promise = Promise.resolve(config)
+
+    while (chain.length) {
+      const { resolved, rejected } = chain.shift()!
+      promise = promise.then(resolved, rejected)
+    }
+
+    return promise
   }
 
   get(url: string, config?: PontusRequestConfig): PontusPromise {
