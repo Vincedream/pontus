@@ -22,6 +22,8 @@ export interface PontusRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  transformRequest?: PontusTransformer | PontusTransformer[]
+  transformResponse?: PontusTransformer | PontusTransformer[]
 
   [propName: string]: any
 }
@@ -81,4 +83,8 @@ export interface ResolvedFn<T> {
 
 export interface RejectedFn {
   (error: any): any
+}
+
+export interface PontusTransformer {
+  (data: any, headers?: any): any
 }
