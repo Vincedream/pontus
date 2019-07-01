@@ -71,6 +71,10 @@ export interface PontusInstance extends Pontus {
   <T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
 }
 
+export interface PontusStatic extends PontusInstance {
+  create(config?: PontusRequestConfig): PontusInstance
+}
+
 export interface PontusInterceptorManager<T> {
   use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
 
