@@ -1,7 +1,7 @@
 import { PontusRequestConfig, PontusPromise, PontusResponse } from '../types'
 import { buildURL } from '../helpers/url'
 import { transformRequest, transformResponse } from '../helpers/data'
-import { processHeaders } from '../helpers/headers'
+import { processHeaders, flattenHeaders } from '../helpers/headers'
 import xhr from './xhr'
 
 export default function dispatchRequest(config: PontusRequestConfig): PontusPromise {
@@ -14,9 +14,11 @@ export default function dispatchRequest(config: PontusRequestConfig): PontusProm
 // 前置处理请求config
 function processConfig(config: PontusRequestConfig): void {
   // 顺序不能变
+  console.log(config)
   config.url = transFormURL(config)
   config.headers = transformHeaders(config)
   config.data = transformRequestData(config)
+  config.headers = flattenHeaders(config.headers, config.method!)
 }
 
 // 调用buildURL，将params转换为url

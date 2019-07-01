@@ -22,6 +22,8 @@ export interface PontusRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+
+  [propName: string]: any
 }
 
 export interface PontusResponse<T = any> {
@@ -44,6 +46,7 @@ export interface PontusError extends Error {
 }
 
 export interface Pontus {
+  defaults: PontusRequestConfig
   interceptors: {
     request: PontusInterceptorManager<PontusRequestConfig>
     response: PontusInterceptorManager<PontusResponse>

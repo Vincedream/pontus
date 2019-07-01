@@ -8,6 +8,7 @@ import {
 } from '../types'
 import dispatchRequest from './dispatchRequest'
 import InterceptorManager from './InterceptorManager'
+import mergeConfig from './mergeConfig'
 
 interface Interceptors {
   request: InterceptorManager<PontusRequestConfig>
@@ -20,9 +21,11 @@ interface PromiseChain<T> {
 }
 
 export default class Pontus {
+  defaults: PontusRequestConfig
   interceptors: Interceptors
 
-  constructor() {
+  constructor(initConfig: PontusRequestConfig) {
+    this.defaults = initConfig
     this.interceptors = {
       request: new InterceptorManager<PontusRequestConfig>(),
       response: new InterceptorManager<PontusResponse>()
@@ -38,7 +41,7 @@ export default class Pontus {
     } else {
       config = url
     }
-
+    config = mergeConfig(this.defaults, config)
     const chain: PromiseChain<any>[] = [
       {
         resolved: dispatchRequest,
