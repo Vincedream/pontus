@@ -24,6 +24,7 @@ export interface PontusRequestConfig {
   timeout?: number
   transformRequest?: PontusTransformer | PontusTransformer[]
   transformResponse?: PontusTransformer | PontusTransformer[]
+  cancelToken?: CancelToken
 
   [propName: string]: any
 }
@@ -73,6 +74,10 @@ export interface PontusInstance extends Pontus {
 
 export interface PontusStatic extends PontusInstance {
   create(config?: PontusRequestConfig): PontusInstance
+
+  CancelToken: CancelTokenStatic
+  Cancel: CancelStatic
+  isCancel: (value: any) => boolean
 }
 
 export interface PontusInterceptorManager<T> {
@@ -91,4 +96,38 @@ export interface RejectedFn {
 
 export interface PontusTransformer {
   (data: any, headers?: any): any
+}
+
+export interface CancelToken {
+  promise: Promise<Cancel>
+  reason?: Cancel
+
+  throwIfRequested(): void
+}
+
+export interface Canceler {
+  (message?: string): void
+}
+
+export interface CancelExecutor {
+  (cancel: Canceler): void
+}
+
+export interface CancelTokenSource {
+  token: CancelToken
+  cancel: Canceler
+}
+
+export interface CancelTokenStatic {
+  new (executor: CancelExecutor): CancelToken
+
+  source(): CancelTokenSource
+}
+
+export interface Cancel {
+  message?: string
+}
+
+export interface CancelStatic {
+  new (message?: string): Cancel
 }

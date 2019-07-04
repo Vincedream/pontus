@@ -5,6 +5,7 @@ import transform from './transform'
 import xhr from './xhr'
 
 export default function dispatchRequest(config: PontusRequestConfig): PontusPromise {
+  throwIfCancellationRequested(config)
   processConfig(config)
   return xhr(config).then(res => {
     return transformResponseData(res)
@@ -39,4 +40,10 @@ function transFormURL(config: PontusRequestConfig): string {
 function transformResponseData(res: PontusResponse): PontusResponse {
   res.data = transform(res.data, res.headers, res.config.transformResponse)
   return res
+}
+
+function throwIfCancellationRequested(config: PontusRequestConfig): void {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested()
+  }
 }
