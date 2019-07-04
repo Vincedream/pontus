@@ -25,6 +25,7 @@ export interface PontusRequestConfig {
   transformRequest?: PontusTransformer | PontusTransformer[]
   transformResponse?: PontusTransformer | PontusTransformer[]
   cancelToken?: CancelToken
+  withCredentials?: boolean
 
   [propName: string]: any
 }
