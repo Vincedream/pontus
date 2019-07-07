@@ -1,5 +1,5 @@
 import { PontusRequestConfig, PontusPromise, PontusResponse } from '../types'
-import { buildURL } from '../helpers/url'
+import { buildURL, isAbsoluteURL, combineURL } from '../helpers/url'
 import { flattenHeaders } from '../helpers/headers'
 import transform from './transform'
 import xhr from './xhr'
@@ -22,20 +22,12 @@ function processConfig(config: PontusRequestConfig): void {
 
 // 调用buildURL，将params转换为url
 function transFormURL(config: PontusRequestConfig): string {
-  const { url, params, paramsSerializer } = config
+  let { url, params, paramsSerializer, baseURL } = config
+  if (baseURL && !isAbsoluteURL(url!)) {
+    url = combineURL(baseURL, url)
+  }
   return buildURL(url!, params, paramsSerializer)
 }
-
-// // 处理Headers
-// function transformHeaders(config: PontusRequestConfig): any {
-//   const { headers = {}, data } = config
-//   return processHeaders(headers, data)
-// }
-
-// // 调用transformRequest，将object类型转换为JSON，赋给post请求中的data
-// function transformRequestData(config: PontusRequestConfig): any {
-//   return transformRequest(config.data)
-// }
 
 function transformResponseData(res: PontusResponse): PontusResponse {
   res.data = transform(res.data, res.headers, res.config.transformResponse)
