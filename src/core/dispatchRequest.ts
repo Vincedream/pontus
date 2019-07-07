@@ -22,8 +22,8 @@ function processConfig(config: PontusRequestConfig): void {
 
 // 调用buildURL，将params转换为url
 function transFormURL(config: PontusRequestConfig): string {
-  const { url, params } = config
-  return buildURL(url!, params)
+  const { url, params, paramsSerializer } = config
+  return buildURL(url!, params, paramsSerializer)
 }
 
 // // 处理Headers
