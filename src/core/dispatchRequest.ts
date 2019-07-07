@@ -21,7 +21,7 @@ function processConfig(config: PontusRequestConfig): void {
 }
 
 // 调用buildURL，将params转换为url
-function transFormURL(config: PontusRequestConfig): string {
+export function transFormURL(config: PontusRequestConfig): string {
   let { url, params, paramsSerializer, baseURL } = config
   if (baseURL && !isAbsoluteURL(url!)) {
     url = combineURL(baseURL, url)

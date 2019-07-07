@@ -73,6 +73,7 @@ export interface Pontus {
   post<T = any>(url: string, data?: any, config?: PontusRequestConfig): PontusPromise<T>
   put<T = any>(url: string, data?: any, config?: PontusRequestConfig): PontusPromise<T>
   patch<T = any>(url: string, data?: any, config?: PontusRequestConfig): PontusPromise<T>
+  getUri(config?: PontusRequestConfig): string
 }
 
 export interface PontusInstance extends Pontus {
@@ -81,12 +82,22 @@ export interface PontusInstance extends Pontus {
   <T = any>(url: string, config?: PontusRequestConfig): PontusPromise<T>
 }
 
+export interface PontusClassStatic {
+  new (config: PontusRequestConfig): Pontus
+}
+
 export interface PontusStatic extends PontusInstance {
   create(config?: PontusRequestConfig): PontusInstance
 
   CancelToken: CancelTokenStatic
   Cancel: CancelStatic
   isCancel: (value: any) => boolean
+
+  all<T>(promises: Array<T | Promise<T>>): Promise<T[]>
+
+  spread<T, R>(callback: (...args: T[]) => R): (arr: T[]) => R
+
+  Pontus: PontusClassStatic
 }
 
 export interface PontusInterceptorManager<T> {

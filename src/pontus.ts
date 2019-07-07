@@ -25,4 +25,16 @@ pontus.CancelToken = CancelToken
 pontus.Cancel = Cancel
 pontus.isCancel = isCancel
 
+pontus.all = function all(promises) {
+  return Promise.all(promises)
+}
+
+pontus.spread = function spread(callback) {
+  return function wrap(arr) {
+    return callback.apply(null, arr)
+  }
+}
+
+pontus.Pontus = Pontus
+
 export default pontus
