@@ -6,7 +6,6 @@ import {
   extend,
   deepMerge
 } from '../../src/helpers/util'
-import { URLSearchParams } from 'url'
 
 describe('helpers:util', () => {
   describe('isXX', () => {
