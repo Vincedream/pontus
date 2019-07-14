@@ -1,4 +1,4 @@
-import { isDate, isObject, isURLSearchParams } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
   protocol: string
@@ -37,7 +37,7 @@ export function buildURL(
 
     Object.keys(params).forEach(key => {
       const val = params[key]
-      if (val === null || typeof val === undefined) {
+      if (val === null || typeof val === 'undefined') {
         return
       }
       let values = []
@@ -51,7 +51,7 @@ export function buildURL(
         if (isDate(val)) {
           // 处理Date类型
           val = val.toISOString()
-        } else if (isObject(val)) {
+        } else if (isPlainObject(val)) {
           // 处理Object
           val = JSON.stringify(val)
         }
@@ -75,7 +75,7 @@ export function buildURL(
 }
 
 export function isAbsoluteURL(url: string): boolean {
-  return /(^[a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
 }
 
 export function combineURL(baseURL: string, relativeURL?: string): string {

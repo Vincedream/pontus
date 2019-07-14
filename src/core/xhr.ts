@@ -11,7 +11,7 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
       data = null,
       url,
       method = 'get',
-      headers,
+      headers = {},
       responseType,
       timeout,
       cancelToken,
@@ -122,10 +122,14 @@ export default function xhr(config: PontusRequestConfig): PontusPromise {
 
     function processCancel(): void {
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort()
-          reject(reason)
-        })
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(() => {
+            // do nothing
+          })
       }
     }
 

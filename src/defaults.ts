@@ -1,6 +1,6 @@
 import { PontusRequestConfig } from './index'
 import { processHeaders } from './helpers/headers'
-import { transformRequest, transformReponse } from './helpers/data'
+import { transformRequest, transformResponse } from './helpers/data'
 
 const defaults: PontusRequestConfig = {
   method: 'get',
@@ -25,7 +25,7 @@ const defaults: PontusRequestConfig = {
 
   transformResponse: [
     function(data: any): any {
-      return transformReponse(data)
+      return transformResponse(data)
     }
   ],
 

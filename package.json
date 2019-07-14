@@ -1,5 +1,5 @@
 {
-  "name": "pontus",
+  "name": "pontus-http",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
@@ -33,8 +33,9 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
-    "postinstall": "ts-node tools/init",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "prepub": "npm run test:prod && npm run build",
+    "pub": "sh release.sh"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -52,7 +53,7 @@
       ".(ts|tsx)": "ts-jest"
     },
     "testEnvironment": "jsdom",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testRegex": "/test/.*\\.(test|spec)\\.(ts)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -71,7 +72,11 @@
       }
     },
     "collectCoverageFrom": [
-      "src/*.{js,ts}"
+      "src/*.{js,ts}",
+      "src/**/*.{js,ts}"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/boot.ts"
     ]
   },
   "prettier": {
@@ -88,12 +93,18 @@
     "@commitlint/config-conventional": "^7.1.2",
     "@types/jest": "^24.0.13",
     "@types/node": "^10.11.0",
+    "@types/nprogress": "0.0.29",
+    "@types/qs": "^6.5.3",
+    "@types/jasmine-ajax": "^3.1.39",
+    "atob": "^2.1.2",
     "body-parser": "^1.18.3",
     "colors": "^1.3.2",
     "commitizen": "^3.0.0",
+    "connect-multiparty": "^2.2.0",
+    "cookie-parser": "^1.4.4",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
-    "css-loader": "^3.0.0",
+    "css-loader": "^2.1.1",
     "cz-conventional-changelog": "^2.1.0",
     "express": "^4.16.4",
     "husky": "^1.0.1",
@@ -101,8 +112,10 @@
     "jest-config": "^24.8.0",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
+    "nprogress": "^0.2.0",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
+    "qs": "^6.7.0",
     "replace-in-file": "^3.4.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.67.0",
@@ -126,15 +139,8 @@
     "typescript": "^3.4.5",
     "webpack": "^4.28.4",
     "webpack-dev-middleware": "^3.5.0",
-    "webpack-hot-middleware": "^2.24.3"
-  },
-  "dependencies": {
-    "@types/nprogress": "^0.2.0",
-    "@types/qs": "^6.5.3",
-    "atob": "^2.1.2",
-    "connect-multiparty": "^2.2.0",
-    "cookie-parser": "^1.4.4",
-    "nprogress": "^0.2.0",
-    "qs": "^6.7.0"
+    "webpack-hot-middleware": "^2.24.3",
+    "jasmine-ajax": "^4.0.0",
+    "jasmine-core": "^3.4.0"
   }
 }
